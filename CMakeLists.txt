@@ -46,7 +46,7 @@ if (NOT ${libmongocxx_FOUND})
 endif()
 include_directories(${LIBMONGOCXX_INCLUDE_DIRS})
 
-find_package(Boost COMPONENTS filesystem system unit_test_framework)
+find_package(Boost COMPONENTS filesystem system unit_test_framework program_options)
 
 find_program(HOMEBREW NAMES brew PATH /usr/local/bin)
 
