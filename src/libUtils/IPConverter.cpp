@@ -19,9 +19,7 @@
 
 #include "IPConverter.h"
 
-
 using namespace std;
-
 
 namespace IPConverter {
 
@@ -49,8 +47,7 @@ void LogBugReport() {
 void LogUnsupported() {
   LogBrand();
   LogBugReport();
-  cout << "Error: Unknown address type - unsupported protocol\n"
-       << endl;
+  cout << "Error: Unknown address type - unsupported protocol\n" << endl;
 }
 
 void LogInvalidIP() {
@@ -64,30 +61,29 @@ void LogInvalidIP() {
 void LogInternalErr() {
   LogBrand();
   LogBugReport();
-  std::cout << "Internal Error: cannot process the input IP address.\n" << std::endl;
+  std::cout << "Internal Error: cannot process the input IP address.\n"
+            << std::endl;
 }
 
-int ToNumericalIPFromStr(
-    const std::string& ipStr, boost::multiprecision::uint128_t& ipInt) {
-        boost::asio::ip::address Addr;
-        try{
-          Addr = boost::asio::ip::address::from_string(ipStr);
-        }
-        catch(const std::exception& e){
-          LogInvalidIP();
-          return -1;
-        }
-        ipInt = 0;
-        if(Addr.is_v4()) {
-          ipInt = convertBytesToInt(Addr.to_v4());
-          return 0;
-        }
-        else if(Addr.is_v6()) {
-          ipInt = convertBytesToInt(Addr.to_v6());
-          return 0;
-        }
+int ToNumericalIPFromStr(const std::string& ipStr,
+                         boost::multiprecision::uint128_t& ipInt) {
+  boost::asio::ip::address Addr;
+  try {
+    Addr = boost::asio::ip::address::from_string(ipStr);
+  } catch (const std::exception& e) {
+    LogInvalidIP();
+    return -1;
+  }
+  ipInt = 0;
+  if (Addr.is_v4()) {
+    ipInt = convertBytesToInt(Addr.to_v4());
+    return 0;
+  } else if (Addr.is_v6()) {
+    ipInt = convertBytesToInt(Addr.to_v6());
+    return 0;
+  }
 
-        LogUnsupported();
-        return -1;
+  LogUnsupported();
+  return -1;
 }
-}
+}  // namespace IPConverter
