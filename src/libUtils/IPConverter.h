@@ -35,8 +35,7 @@ namespace LogInfo {
 void LogBrand();
 void LogBugReport();
 void LogBrandBugReport();
-}
-
+}  // namespace LogInfo
 
 namespace IPConverter {
 

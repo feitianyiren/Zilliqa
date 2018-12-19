@@ -33,11 +33,11 @@ void LogBugReport() {
           "<https://github.com/Zilliqa/Zilliqa> \n"
        << endl;
 }
-void LogBrandBugReport(){
+void LogBrandBugReport() {
   LogBrand();
   LogBugReport();
 }
-}
+}  // namespace LogInfo
 
 namespace IPConverter {
 using namespace LogInfo;
@@ -53,20 +53,22 @@ const std::string ToStrFromNumericalIP(
 
 void LogUnsupported(const string& ip) {
   LogBrandBugReport();
-  cerr << "Error: Unknown address type " << ip << ", unsupported protocol\n" << endl;
+  cerr << "Error: Unknown address type " << ip << ", unsupported protocol\n"
+       << endl;
 }
 
 void LogInvalidIP(const string& ip) {
   LogBrandBugReport();
-  cerr << "Error: address " << ip << " does not contain a character string "
+  cerr << "Error: address " << ip
+       << " does not contain a character string "
           "representing a valid network address\n"
        << endl;
 }
 
 void LogInternalErr(const string& ip) {
   LogBrandBugReport();
-  cerr << "Internal Error: cannot process the input IP address "<< ip <<".\n"
-            << std::endl;
+  cerr << "Internal Error: cannot process the input IP address " << ip << ".\n"
+       << std::endl;
 }
 
 int ToNumericalIPFromStr(const std::string& ipStr,
