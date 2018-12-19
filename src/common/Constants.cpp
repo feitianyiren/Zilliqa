@@ -305,17 +305,14 @@ const string UPGRADE_HOST_REPO{
 const string SCILLA_ROOT{
     ReadConstantString("SCILLA_ROOT", "node.smart_contract.")};
 const string SCILLA_CHECKER{
-    SCILLA_ROOT + '/' +
     ReadConstantString("SCILLA_CHECKER", "node.smart_contract.")};
 const string SCILLA_BINARY{
-    SCILLA_ROOT + '/' +
     ReadConstantString("SCILLA_BINARY", "node.smart_contract.")};
 const string SCILLA_FILES{
     ReadConstantString("SCILLA_FILES", "node.smart_contract.")};
 const string SCILLA_LOG{
     ReadConstantString("SCILLA_LOG", "node.smart_contract.")};
 const string SCILLA_LIB{
-    SCILLA_ROOT + '/' +
     ReadConstantString("SCILLA_LIB", "node.smart_contract.")};
 const string INIT_JSON{SCILLA_FILES + '/' +
                        ReadConstantString("INIT_JSON", "node.smart_contract.")};
