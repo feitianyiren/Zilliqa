@@ -17,6 +17,8 @@
  * program files.
  */
 
+#include <boost/lexical_cast.hpp>
+
 #include "Account.h"
 #include "common/Messages.h"
 #include "depends/common/CommonIO.h"
@@ -61,17 +63,17 @@ void Account::InitStorage() {
   }
 }
 
-void Account::InitContract(const vector<unsigned char>& data) {
+bool Account::InitContract(const vector<unsigned char>& data) {
   SetInitData(data);
-  InitContract();
+  return InitContract();
 }
 
-void Account::InitContract() {
+bool Account::InitContract() {
   // LOG_MARKER();
   if (m_initData.empty()) {
     LOG_GENERAL(WARNING, "Init data for the contract is empty");
     m_initValJson = Json::arrayValue;
-    return;
+    return false;
   }
   Json::CharReaderBuilder builder;
   unique_ptr<Json::CharReader> reader(builder.newCharReader());
@@ -82,8 +84,52 @@ void Account::InitContract() {
                      &errors)) {
     LOG_GENERAL(WARNING,
                 "Failed to parse initialization contract json: " << errors);
-    return;
+    return false;
   }
+
+  bool hasScillaVersion;
+
+  for (auto& v : root) {
+    if (!v.isMember("vname") || !v.isMember("type") || !v.isMember("value")) {
+      LOG_GENERAL(WARNING,
+                  "This variable in initialization of contract is corrupted");
+      return false;
+    }
+
+    string vname = v["vname"].asString();
+    string type = v["type"].asString();
+
+    if (!hasScillaVersion && vname == "_scilla_version" && type == "Uint32") {
+      try {
+        m_scillaVersion = boost::lexical_cast<uint32_t>(v["value"].asString());
+      } catch (...) {
+        LOG_GENERAL(WARNING, "_scilla_version is not a number");
+        return false;
+      }
+
+      if (!boost::filesystem::exists(SCILLA_ROOT + '/' +
+                                     std::to_string(m_scillaVersion))) {
+        LOG_GENERAL(WARNING, "Folder for desired version doesn't exists");
+        return false;
+      }
+
+      hasScillaVersion = true;
+    }
+
+    Json::StreamWriterBuilder writeBuilder;
+    std::unique_ptr<Json::StreamWriter> writer(writeBuilder.newStreamWriter());
+    ostringstream oss;
+    writer->write(v["value"], &oss);
+    string value = oss.str();
+
+    SetStorage(vname, type, value, false);
+  }
+
+  if (!hasScillaVersion) {
+    LOG_GENERAL(WARNING, "No _scilla_version indicated");
+    return false;
+  }
+
   m_initValJson = root;
 
   // Append createBlockNum
@@ -95,23 +141,7 @@ void Account::InitContract() {
     m_initValJson.append(createBlockNumObj);
   }
 
-  for (auto& v : root) {
-    if (!v.isMember("vname") || !v.isMember("type") || !v.isMember("value")) {
-      LOG_GENERAL(WARNING,
-                  "This variable in initialization of contract is corrupted");
-      continue;
-    }
-    string vname = v["vname"].asString();
-    string type = v["type"].asString();
-
-    Json::StreamWriterBuilder writeBuilder;
-    std::unique_ptr<Json::StreamWriter> writer(writeBuilder.newStreamWriter());
-    ostringstream oss;
-    writer->write(v["value"], &oss);
-    string value = oss.str();
-
-    SetStorage(vname, type, value, false);
-  }
+  return true;
 }
 
 void Account::SetCreateBlockNum(const uint64_t& blockNum) {
@@ -119,6 +149,8 @@ void Account::SetCreateBlockNum(const uint64_t& blockNum) {
 }
 
 const uint64_t& Account::GetCreateBlockNum() const { return m_createBlockNum; }
+
+const uint32_t& Account::GetScillaVersion() const { return m_scillaVersion; }
 
 bool Account::Serialize(vector<unsigned char>& dst, unsigned int offset) const {
   if (!Messenger::SetAccount(dst, offset, *this)) {
