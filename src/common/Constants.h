@@ -135,7 +135,6 @@ extern const unsigned int NUM_FORWARDED_BLOCK_RECEIVERS_PER_SHARD;
 extern const unsigned int NUM_NODES_TO_SEND_LOOKUP;
 extern const unsigned int NUM_OF_TREEBASED_CHILD_CLUSTERS;
 extern const unsigned int POW_PACKET_SENDERS;
-extern const unsigned int POWPACKETSUBMISSION_WINDOW_IN_SECONDS;
 extern const unsigned int TX_SHARING_CLUSTER_SIZE;
 
 // Dispatcher constants
@@ -144,7 +143,6 @@ extern const std::string TXN_PATH;
 
 // Epoch timing constants
 extern const unsigned int DELAY_FIRSTXNEPOCH_IN_MS;
-
 extern const unsigned int FETCHING_MISSING_DATA_TIMEOUT;
 extern const unsigned int FINALBLOCK_DELAY_IN_MS;
 extern const unsigned int LOOKUP_DELAY_SEND_TXNPACKET_IN_MS;
@@ -152,6 +150,7 @@ extern const unsigned int MICROBLOCK_TIMEOUT;
 extern const unsigned int NEW_NODE_SYNC_INTERVAL;
 extern const unsigned int POW_SUBMISSION_TIMEOUT;
 extern const unsigned int POW_WINDOW_IN_SECONDS;
+extern const unsigned int POWPACKETSUBMISSION_WINDOW_IN_SECONDS;
 extern const unsigned int RECOVERY_SYNC_TIMEOUT;
 extern const unsigned int TX_DISTRIBUTE_TIME_IN_MS;
 extern const unsigned int NEW_LOOKUP_SYNC_DELAY_IN_SECONDS;
@@ -279,6 +278,7 @@ extern const unsigned int MAX_CODE_SIZE_IN_BYTES;
 extern const unsigned int MAX_CONTRACT_DEPTH;
 extern const unsigned int SYS_TIMESTAMP_VARIANCE_IN_SECONDS;
 extern const unsigned int TXN_MISORDER_TOLERANCE_IN_PERCENT;
+extern const unsigned int PACKET_EPOCH_LATE_ALLOW;
 
 // Viewchange constants
 extern const unsigned int POST_VIEWCHANGE_BUFFER;

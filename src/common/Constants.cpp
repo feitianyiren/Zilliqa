@@ -103,8 +103,6 @@ const unsigned int NUM_OF_TREEBASED_CHILD_CLUSTERS{ReadConstantNumeric(
     "NUM_OF_TREEBASED_CHILD_CLUSTERS", "node.data_sharing.")};
 const unsigned int POW_PACKET_SENDERS{
     ReadConstantNumeric("POW_PACKET_SENDERS", "node.data_sharing.")};
-const unsigned int POWPACKETSUBMISSION_WINDOW_IN_SECONDS{ReadConstantNumeric(
-    "POWPACKETSUBMISSION_WINDOW_IN_SECONDS", "node.data_sharing.")};
 const unsigned int TX_SHARING_CLUSTER_SIZE{
     ReadConstantNumeric("TX_SHARING_CLUSTER_SIZE", "node.data_sharing.")};
 
@@ -130,6 +128,8 @@ const unsigned int POW_SUBMISSION_TIMEOUT{
     ReadConstantNumeric("POW_SUBMISSION_TIMEOUT", "node.epoch_timing.")};
 const unsigned int POW_WINDOW_IN_SECONDS{
     ReadConstantNumeric("POW_WINDOW_IN_SECONDS", "node.epoch_timing.")};
+const unsigned int POWPACKETSUBMISSION_WINDOW_IN_SECONDS{ReadConstantNumeric(
+    "POWPACKETSUBMISSION_WINDOW_IN_SECONDS", "node.epoch_timing.")};
 const unsigned int RECOVERY_SYNC_TIMEOUT{
     ReadConstantNumeric("RECOVERY_SYNC_TIMEOUT", "node.epoch_timing.")};
 const unsigned int TX_DISTRIBUTE_TIME_IN_MS{
@@ -363,6 +363,8 @@ const unsigned int SYS_TIMESTAMP_VARIANCE_IN_SECONDS{ReadConstantNumeric(
     "SYS_TIMESTAMP_VARIANCE_IN_SECONDS", "node.transactions.")};
 const unsigned int TXN_MISORDER_TOLERANCE_IN_PERCENT{ReadConstantNumeric(
     "TXN_MISORDER_TOLERANCE_IN_PERCENT", "node.transactions.")};
+const unsigned int PACKET_EPOCH_LATE_ALLOW{
+    ReadConstantNumeric("PACKET_EPOCH_LATE_ALLOW", "node.transactions.")};
 
 // Viewchange constants
 const unsigned int POST_VIEWCHANGE_BUFFER{
