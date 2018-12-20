@@ -1156,7 +1156,7 @@ bool Node::ProcessTxnPacketFromLookupCore(const vector<unsigned char>& message,
   if (dsBlockNum !=
       m_mediator.m_dsBlockChain.GetLastBlock().GetHeader().GetBlockNum()) {
     LOG_GENERAL(WARNING, "Wrong DS block num ("
-                             << dsBlockNum << "), m_myshardId ("
+                             << dsBlockNum << "), expected ("
                              << m_mediator.m_dsBlockChain.GetLastBlock()
                                     .GetHeader()
                                     .GetBlockNum()
