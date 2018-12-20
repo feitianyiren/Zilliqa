@@ -25,6 +25,8 @@
 #include <iostream>
 #include "libUtils/Logger.h"
 #include "boost/program_options.hpp"
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "depends/NAT/nat.h"
 #include "libNetwork/P2PComm.h"
@@ -56,7 +58,7 @@ int main(int argc, const char* argv[]) {
     string privK;
     string pubK;
     string address;
-    int port = 0;
+    int port = -1;
     uint8_t synctype = 0;
     const char* synctype_descr = "0(default) for no, 1 for new, 2 for normal, 3 for ds, 4 for lookup";
 
@@ -66,8 +68,8 @@ int main(int argc, const char* argv[]) {
         ("help,h", "Print help messages")
         ("privk,i", po::value<string>(&privK)->required(), "32-byte private key")
         ("pubk,u", po::value<string>(&pubK)->required(), "32-byte public key")
-        ("address,a", po::value<string>(&address)->required(), "Listen IPv4/6 address in standard \"dotted decimal\" format, otherwise \"NAT\"")
-        ("port,p", po::value<int>(&port)->required(), "Specifies port to bind to")
+        ("address,a", po::value<string>(&address)->required(), "Listen IPv4/6 address in standard \"dotted decimal\" or optionally \"dotted decimal:portnumber\" format, otherwise \"NAT\"")
+        ("port,p", po::value<int>(&port), "Specifies port to bind to, if not specified in address")
         ("loadconfig,l", "Loads configuration if set")
         ("synctype,s", po::value<uint8_t>(&synctype), synctype_descr)
         ("recovery,r", "Runs in recovery mode if set");
@@ -88,21 +90,15 @@ int main(int argc, const char* argv[]) {
       }
       po::notify(vm);
 
-      if ((port < 0) || (port > 65535))   {
-        LogInfo::LogBrandBugReport();
-        std::cerr << "Invalid port number." << endl;
-        return ERROR_IN_COMMAND_LINE;
-      }
-
       if (privK.length() != 32) {
         LogInfo::LogBrandBugReport();
-        std::cerr << "Invalid length of private key." << endl;
+        std::cerr << "Invalid length of private key" << endl;
         return ERROR_IN_COMMAND_LINE;
       }
 
       if (pubK.length() != 32) {
         LogInfo::LogBrandBugReport();
-        std::cerr << "Invalid length of public key." << endl;
+        std::cerr << "Invalid length of public key" << endl;
         return ERROR_IN_COMMAND_LINE;
       }
 
@@ -110,15 +106,42 @@ int main(int argc, const char* argv[]) {
         LogInfo::LogBrandBugReport();
         std::cerr << "Invalid synctype, please select: " << synctype_descr << "." << endl;
       }
+
+      if (address != "NAT") {
+        std::vector<std::string> socket_pair;
+        boost::algorithm::split(socket_pair, address, boost::algorithm::is_any_of(":"));
+        if (socket_pair.size() == 2) {
+          address = socket_pair[0];
+          try
+          {
+            port = boost::lexical_cast<int>(socket_pair[1]);
+            std::cout << "port" << port << endl;
+          }
+          catch (boost::bad_lexical_cast)
+          {
+            LogInfo::LogBrandBugReport();
+            std::cerr << "Invalid port number" << endl;
+            return ERROR_IN_COMMAND_LINE;
+          }
+        }
+      }
+
+      if ((port < 0) || (port > 65535))   {
+        LogInfo::LogBrandBugReport();
+        std::cerr << "Invalid or missing port number" << endl;
+        return ERROR_IN_COMMAND_LINE;
+      }
     }
     catch(boost::program_options::required_option& e)
     {
+      LogInfo::LogBrandBugReport();
       std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
       std::cout << desc;
       return ERROR_IN_COMMAND_LINE;
     }
     catch(boost::program_options::error& e)
     {
+      LogInfo::LogBrandBugReport();
       std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
       return ERROR_IN_COMMAND_LINE;
     }
@@ -133,6 +156,7 @@ int main(int argc, const char* argv[]) {
       int mappedPort = nt->addRedirect(port);
 
       if (mappedPort <= 0) {
+        LogInfo::LogBrandBugReport();
         LOG_GENERAL(WARNING, "NAT ERROR");
         return -1;
       } else {
@@ -141,12 +165,12 @@ int main(int argc, const char* argv[]) {
             << mappedPort);
       }
 
-      if (IPConverter::ToNumericalIPFromStr(nt->externalIP().c_str(), ip) != 0) {
+      if (! IPConverter::ToNumericalIPFromStr(nt->externalIP().c_str(), ip)) {
         return ERROR_IN_COMMAND_LINE;
       }
       my_network_info = Peer(ip, mappedPort);
     } else {
-      if (IPConverter::ToNumericalIPFromStr(address, ip) != 0) {
+      if (! IPConverter::ToNumericalIPFromStr(address, ip)) {
         return ERROR_IN_COMMAND_LINE;
       }
       my_network_info = Peer(ip, port);
