@@ -42,10 +42,9 @@ BOOST_AUTO_TEST_CASE(testInitEmpty) {
 
   Account acc1(TestUtils::DistUint64(), 0);
   std::vector<unsigned char> data;
-  acc1.InitContract(data);
-  acc1.SetInitData(data);
 
   Account acc2(data, 0);
+  BOOST_CHECK_EQUAL(false, acc1.InitContract(data));
   BOOST_CHECK_EQUAL(false, acc2.isContract());
 }
 
@@ -68,8 +67,14 @@ BOOST_AUTO_TEST_CASE(testInit) {
       std::vector<unsigned char>(invalidmessage.begin(), invalidmessage.end());
   acc1.InitContract(data);
 
-  std::string message =
+  invalidmessage =
       "[{\"vname\":\"name\",\"type\":\"sometype\",\"value\":\"somevalue\"}]";
+  data =
+      std::vector<unsigned char>(invalidmessage.begin(), invalidmessage.end());
+  acc1.InitContract(data);
+
+  std::string message =
+      "[{\"vname\":\"_scilla_version\",\"type\":\"Uint32\",\"value\":\"0\"}]";
   data = std::vector<unsigned char>(message.begin(), message.end());
   acc1.InitContract(data);
 
