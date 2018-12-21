@@ -21,6 +21,7 @@
 #define __SWINFO_H__
 
 #include <stdint.h>
+#include <iostream>
 #include "common/Serializable.h"
 
 class SWInfo : public Serializable {
@@ -74,6 +75,23 @@ class SWInfo : public Serializable {
   const uint32_t& GetFixVersion() const;
   const uint64_t& GetUpgradeDS() const;
   const uint32_t& GetCommit() const;
+
+  static void LogBrand() {
+    std::cout << "Copyright (C) Zilliqa. Version 3.0 (Durian - Mao Shan Wang). "
+            "<https://www.zilliqa.com/> "
+         << std::endl;
+  }
+
+  static void LogBugReport() {
+    std::cout << "For bug reporting, please create an issue at "
+            "<https://github.com/Zilliqa/Zilliqa> \n"
+         << std::endl;
+  }
+
+  static void LogBrandBugReport() {
+    LogBrand();
+    LogBugReport();
+  }
 };
 
 #endif  // __SWINFO_H__
