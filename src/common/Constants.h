@@ -240,6 +240,7 @@ extern const unsigned int DSBLOCK_EXTRA_WAIT_TIME;
 extern const unsigned int DIFF_IP_TOLERANCE_IN_PERCENT;
 extern const unsigned int TXN_SHARD_TARGET_DIFFICULTY;
 extern const unsigned int TXN_DS_TARGET_DIFFICULTY;
+extern const unsigned int PRIORITY_TOLERANCE_IN_PERCENT;
 
 // Recovery and upgrading constants
 extern const unsigned int WAIT_LOOKUP_WAKEUP_IN_SECONDS;
@@ -249,6 +250,7 @@ extern const unsigned int TERMINATION_COUNTDOWN_IN_SECONDS;
 extern const std::string UPGRADE_HOST_ACCOUNT;
 extern const std::string UPGRADE_HOST_REPO;
 extern const bool RECOVERY_TRIM_INCOMPLETED_BLOCK;
+extern const bool REJOIN_NODE_NOT_IN_NETWORK;
 
 // Smart contract constants
 extern const std::string SCILLA_ROOT;
